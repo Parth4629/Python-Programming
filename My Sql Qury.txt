@@ -1,0 +1,190 @@
+[1]
+
+CREATE TABLE registration(
+id INT( 30 ) ,
+name VARCHAR( 20 ) ,
+mobile INT( 10 ) 
+)
+
+
+[2]
+
+insert into customer values (1,"parth","pen")
+
+---------------------------------------------------------------------------------------------------------------------------
+
+[1]SELECT ONUM, AMOUNT, ODATE FROM `order`;
+
+[2]SELECT * FROM customer WHERE SNUM='1001';
+
+[3]select city,sname,snum,commission from salesman;
+
+[4]SELECT DISTINCT snum FROM `order`;
+
+[5]SELECT * FROM `order` WHERE AMOUNT>1000;
+
+[6]select sname,city from salesman where city='london' and commission > 10;
+
+[7]SELECT * FROM customer WHERE NOT CITY='rome' or NOT RATING<=100;
+
+[8]SELECT * FROM `order` WHERE AMOUNT>1000 and not (SNUM=1006 and ODATE='10/03/99');
+
+[9][i]SELECT * FROM `order` WHERE NOT ODATE='10/05/99';
+   [ii]SELECT * FROM `order` WHERE ODATE='10/03/99' or ODATE='10/04/99' or ODATE='10/06/99'
+
+[10]SELECT * FROM customer WHERE CNAME LIKE 'c%';
+
+[11](i)SELECT * FROM Customer WHERE CNAME>'a' or CNAME<'g';
+    (ii)SELECT * FROM Customer WHERE CNAME LIKE 'a%'<=>'g%';
+
+[12]SELECT * FROM `order` WHERE AMOUNT=0 or AMOUNT='null';
+
+[13]SELECT max(AMOUNT) from `order` where SNUM=1002 or SNUM=1007 GROUP by SNUM order by AMOUNT
+ DESC;
+
+	 Max(1002)	       Max(1007)
+          5160.45		1098.25
+
+
+[14]SELECT AVG(AMOUNT),SUM(AMOUNT) FROM `order`;
+
+	      Avg			sum
+	2666.537023735046	26665.370237350464
+
+[15]SELECT COUNT(DISTINCT(SNUM)) FROM `order`;
+
+[16]SELECT max(AMOUNT),SNUM,ODATE from `order` group by SNUM,ODATE;
+
+[17]SELECT MIN(AMOUNT),CNUM from `order` group by CNUM;
+
+[18]SELECT * FROM `customer` WHERE CNAME LIKE 'G%' ORDER BY CNAME;
+
+[19]SELECT CONCAT("There are " , "",COUNT(ONUM),"" , " order on ", "",ODATE,"" ) FROM `order` GROUP BY 
+ ODATE
+
+[20]SELECT ONUM,SNUM,AMOUNT,(AMOUNT*0.12)"AMOUNT of Commission" from `order`;
+
+[21]SELECT * from `customer` order by rating desc;
+
+[22]SELECT CNAME,SNAME FROM `customer` left join salesman on customer.SNUM=salesman.SNUM;
+
+[23]SELECT o.*,c.CNAME,s.SNAME FROM `order` o JOIN customer c ON o.CNUM=c.CNUM join salesman s on
+ c.SNUM=s.SNUM;
+
+*
+[24](i) SELECT o.*,c.CITY 'CUSTOMER CITY',s.city'SALESMAN CITY' FROM `order` o join customer c on 
+ o.cnum=c.cnum join salesman s on c.snum=s.snum and c.city!=s.city;
+    
+   (ii)SELECT o.*,c.city 'CUSTOMER CITY',s.city 'SALESMAN CITY' FROM `order` o join customer c join 
+ salesman s on o.cnum=c.cnum and c.snum=s.snum and c.city!=s.city
+*
+[25]SELECT c.*,s.commission from customer c JOIN salesman s on c.SNUM=s.SNUM where 
+ commission>12;
+
+[26]SELECT c.cname , c1.cname from customer c join customer c1 on c.rating=c1.rating and c.cnum >
+ c1.cnum;
+
+*
+[27] SELECT * from customer where snum in ( select snum city from salesman where sname='NIRAJ') or 
+ city in (SELECT city from salesman WHERE sname='NIRAJ');
+
+*
+[28]SELECT s.sname,s.city,s1.sname,s1.city from salesman s join salesman s1 where s.city = s1.city and 
+ s.snum > s1.snum;
+
+*
+[29] SELECT cname,city FROM customer WHERE rating in (SELECT rating from customer WHERE 
+ cname='HARDIK');
+
+[30]SELECT * FROM `order` WHERE snum in (SELECT snum from salesman WHERE sname='MITI')
+
+[31]SELECT * from `order` WHERE snum in( SELECT snum from customer WHERE cname='HARDIK')
+
+*
+[32]SELECT * from `order` where amount > (SELECT avg(amount) FROM `order` WHERE
+ odate='10/04/99')
+
+
+[33](i)SELECT COUNT(cname) from customer WHERE rating >(SELECT avg(rating) from customer WHERE 
+ city='SURAT');
+    
+    (ii)SELECT COUNT(cnum) from customer WHERE rating >(SELECT avg(rating) from custo
+mer WHERE 
+ city='SURAT');
+	
+[34]SELECT c.cname,c.cnum from customer c WHERE rating = (SELECT max(rating) from customer c1 
+ WHERE c.city=c1.city);
+
+[35]SELECT * from customer WHERE rating > any(SELECT rating from customer WHERE city='ROME');
+
+[36]SELECT * from customer WHERE rating > all(SELECT rating from customer WHERE city='ROME');
+
+[37]SELECT * from customer WHERE not rating = any(SELECT rating from customer WHERE city='SURAT');
+
+[38]SELECT cname,city,concat(rating," ","HIGH RATING") as rating from customer WHERE rating>=200 
+ UNION SELECT cname,city,concat(rating," ","LOW RATING") as rating from customer WHERE 
+ rating<200;
+
+[39]INSERT into `salesman`(snum,sname,city,commission) VALUES('1008','RAKESH','UNKNOWN','14%');
+
+[40] INSERT into customer(city,cname,cnum) VALUES('LONDON','PRATIK','2008');
+
+[41]CREATE TABLE LondonStaff
+ (
+ snum int,
+ sname varchar(50),
+ city varchar(50),
+ commission int
+ )
+
+[42]INSERT into londonstaff(snum,sname,city,commission) SELECT * from salesman WHERE 
+ city='LONDON';
+
+[43]CREATE TABLE daytotal As select odate'DATE',amount 'TOTAL' from order
+
+[44]DELETE from order WHERE cnum in(SELECT cnum from customer WHERE cname='CHANDU');
+
+[45]UPDATE customer set rating=rating+100 WHERE city='ROME';
+
+[46]UPDATE salesman set commission=commission*2 WHERE city='LONDON'; 
+
+[47] DELETE from salesman WHERE snum in (SELECT snum form order WHERE amount in (SELECT 
+ min(amount) from order GROUP BY odate));
+
+[48]DELETE from customer WHERE not cnum in (SELECT cnum form order WHERE odate in (SELECT 
+ max(odate) from order ));
+
+[49](i) For Add column :- ALTER TABLE `order` ADD item_name varchar(250);
+    (ii) For Deleting column :- ALTER TABLE `order` DROP COLUMN item_name;
+
+[50]
+
+[51] CREATE VIEW Big_orders AS SELECT * FROM `order` WHERE amount>4000;
+
+[52]CREATE VIEW high_rating AS SELECT * from customer WHERE rating in(SELECT max(rating) from 
+ customer);
+
+[53] CREATE VIEW count_saleman AS SELECT count(snum),city from salesman GROUP BY city;
+
+[54]CREATE VIEW avg_total AS SELECT s.sname,o.snum,avg(amount),count(onum) from `order` o join 
+ salesman s on o.snum=s.snum GROUP by s.sname,o.snum;
+
+[55] CREATE VIEW show_name as SELECT o.onum,o.amount,s.sname,c.cname from `order` o join 
+ salesman s join customer c on o.snum=s.snum and o.cnum=c.cnum;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
